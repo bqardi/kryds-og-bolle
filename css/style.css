@@ -1,0 +1,222 @@
+/* #region RESETS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+}
+
+:root {
+    --theme-background: #fff;
+    --theme-text: #000;
+    --theme-link: indigo;
+    --theme-link-hover: crimson;
+}
+
+body {
+    color: var(--theme-text);
+    background-color: var(--theme-background);
+}
+
+a {
+    text-decoration: none;
+    color: var(--theme-link);
+    transition: color 300ms;
+}
+
+a:hover {
+    color: var(--theme-link-hover);
+}
+
+button {
+    padding: 12px;
+    border: 1px solid gray;
+    border-radius: 2px;
+    cursor: pointer;
+    outline: none;
+    transition: filter 300ms;
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
+button:active {
+    filter: brightness(1.2);
+}
+
+
+/* #endregion RESETS */
+
+
+/* #region MAIN LAYOUT */
+
+.wrapper {
+    display: grid;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 10vw;
+}
+
+
+/* #endregion MAIN LAYOUT */
+
+
+/* #region HEADER */
+
+.game {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.main-header {
+    display: grid;
+    grid-template-rows: 100px 50px 48px;
+}
+
+.headline {
+    padding-top: 10px;
+}
+
+.level-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: green;
+}
+
+.game-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.game-level {
+    background-color: darkseagreen;
+}
+
+.game-level.selected {
+    color: white;
+    background-color: green;
+}
+
+.explanation {
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+}
+
+
+/* #endregion HEADER */
+
+
+/* #region GAME BOARD */
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+    background-color: black;
+    border: 8px solid black;
+}
+
+.field {
+    background-color: white;
+    width: 25vw;
+    height: 25vw;
+    max-width: 20vh;
+    max-height: 20vh;
+}
+
+.field:hover {
+    background-color: #fff5b9;
+}
+
+.field.x>.x {
+    display: block;
+}
+
+.field.o>.o {
+    display: block;
+}
+
+.win-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+    transition: all 150ms ease-out;
+}
+
+.win-screen__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border: 8px solid black;
+    padding: 32px;
+}
+
+.win-screen__padding-right {
+    padding-right: 32px;
+}
+
+.win-screen__content .icon {
+    width: 150px;
+    height: 150px;
+}
+
+
+/* #endregion GAME BOARD */
+
+
+/* #region JS SETs */
+
+.hidden {
+    display: none;
+}
+
+.transparent {
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0);
+}
+
+
+/* #endregion JS SETs */
+
+
+/* #region STATS */
+
+.game-stats__content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.game-stats__field {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+}
+
+.game-stats__title {
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.game-stats__value {
+    color: green;
+}
+
+
+/* #endregion STATS */

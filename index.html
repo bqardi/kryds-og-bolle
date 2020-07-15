@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Simpelt spil, kryds og bolle, der handler om at få tre på stribe.">
+    <title>Kryds og bolle</title>
+    <link rel="preload stylesheet" href="./css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="./css/style.css"></noscript>
+    <link rel="shortcut icon" href="./images/logo.png" type="image/png">
+    <script src="./js/index.js" defer></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="main-header">
+            <div class="headline">
+                <h1>Kryds og bolle</h1>
+                <span id="level-text" class="level-text">Dum</span>
+            </div>
+            <nav class="game-nav">
+                <button class="game-level" data-level="0" data-explanation="Placerer udelukkende tilfældigt på brættet.">Dum</button>
+                <button class="game-level" data-level="1" data-explanation="Placerer tilfældigt, men prøver at vinde.">Angrib</button>
+                <button class="game-level" data-level="2" data-explanation="Placerer tilfældigt, men prøver at undgå at du vinder.">Beskyt</button>
+                <button class="game-level" data-level="3" data-explanation="Placerer tilfældigt, men prøver både at vinde og beskytte sig selv.">Mester</button>
+            </nav>
+            <div class="explanation">
+                <p id="explanation" class="explanation-text">
+                    <!-- Dynamic content -->
+                </p>
+            </div>
+        </header>
+        <div class="game">
+            <div class="board">
+                <div id="0" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="1" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="2" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="3" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="4" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="5" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="6" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="7" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+                <div id="8" class="field">
+                    <svg class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                </div>
+            </div>
+            <div id="win" class="win-screen transparent">
+                <div class="win-screen__content">
+                    <svg id="x-win" class="icon x hidden" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
+                    <svg id="o-win" class="icon o hidden" viewBox="0 0 24 24"><path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+                    <h2 id="no-win" class="win-screen__text win-screen__padding-right">I N G E N</h2>
+                    <h2 class="win-screen__text">V I N D E R</h2>
+                </div>
+            </div>
+        </div>
+        <section class="game-stats">
+            <h2>Antal vundne:</h2>
+            <div class="game-stats__content">
+                <div class="game-stats__field">
+                    <span class="game-stats__title">X:</span><span id="stat-x" class="game-stats__value">0</span>
+                </div>
+                <div class="game-stats__field">
+                    <span class="game-stats__title">O:</span><span id="stat-o" class="game-stats__value">0</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
