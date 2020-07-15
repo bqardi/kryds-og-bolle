@@ -31,19 +31,24 @@ a:hover {
 
 button {
     padding: 12px;
-    border: 1px solid gray;
+    border: 1px solid black;
     border-radius: 2px;
     cursor: pointer;
     outline: none;
-    transition: filter 300ms;
+    transition: all 300ms;
 }
 
 button:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.2);
 }
 
 button:active {
-    filter: brightness(1.2);
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+svg {
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -51,6 +56,12 @@ button:active {
 
 
 /* #region MAIN LAYOUT */
+
+body {
+    background-image: url(../images/wood.jpg);
+    color: white;
+    text-shadow: 1px 1px 2px black;
+}
 
 .wrapper {
     display: grid;
@@ -81,31 +92,60 @@ button:active {
     padding-top: 10px;
 }
 
-.level-text {
-    font-size: 1.5rem;
+.level-container {
+    font-size: 1.2rem;
     font-weight: 700;
-    color: green;
+}
+
+.level-text {
+    color: lawngreen;
 }
 
 .game-nav {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 5px;
 }
 
 .game-level {
-    background-color: darkseagreen;
+    background-color: palegreen;
+    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.75);
+}
+
+.game-level svg {
+    max-height: 24px;
 }
 
 .game-level.selected {
     color: white;
-    background-color: green;
+    background-color: lawngreen;
+    transform: scale(1.03);
+    box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.5);
+}
+
+button.game-level.inactive {
+    color: gray;
+    background-color: darkgray;
+    filter: brightness(1);
+    box-shadow: 3px 3px 6px 0 rgba(0, 0, 0, 0.5);
+}
+
+button.game-level.inactive svg {
+    fill: gray;
 }
 
 .explanation {
     display: flex;
     align-items: center;
     padding: 5px 0;
+}
+
+.level-mode {
+    background-color: white;
+}
+
+.level-mode.active {
+    background-color: lawngreen;
 }
 
 
@@ -121,27 +161,150 @@ button:active {
     gap: 8px;
     background-color: black;
     border: 8px solid black;
+    box-shadow: 4px 4px 8px 0 rgba(0, 0, 0, 0.75);
 }
 
 .field {
-    background-color: white;
+    --piece-icon-color: #ffd885;
+    background-image: url(../images/wood-piece.jpg);
+    background-size: 300%;
     width: 25vw;
     height: 25vw;
     max-width: 20vh;
     max-height: 20vh;
+    box-shadow: inset 3px 3px 6px 0 rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.field--0 {
+    background-position: 0 80%;
+}
+
+.field--1 {
+    background-position: 100% 90%;
+}
+
+.field--2 {
+    background-position: 0 80%;
+}
+
+.field--3 {
+    background-position: 200% 100%;
+}
+
+.field--4 {
+    background-position: 0 80%;
+}
+
+.field--5 {
+    background-position: 200% 100%;
+}
+
+.field--6 {
+    background-position: 100% 90%;
+}
+
+.field--7 {
+    background-position: 200% 100%;
+}
+
+.field--8 {
+    background-position: 100% 90%;
+}
+
+.field-piece {
+    background-image: url(../images/wood-piece.jpg);
+    background-position: 0 0;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.field:hover .field-piece {
+    opacity: 0.5;
+    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.75);
+}
+
+.field.placed .field-piece {
+    opacity: 1;
+    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.75);
 }
 
 .field:hover {
-    background-color: #fff5b9;
+    background-color: #bfff80;
 }
 
-.field.x>.x {
+.field.placed:hover {
+    cursor: not-allowed;
+}
+
+.field svg {
+    fill: var(--piece-icon-color);
+}
+
+.field.x .x {
     display: block;
 }
 
-.field.o>.o {
+.field.o .o {
     display: block;
 }
+
+.placed .field-piece {
+    animation-name: bounce;
+    animation-duration: 1200ms;
+}
+
+.placed .field-piece svg {
+    animation-name: colorFade;
+    animation-duration: 800ms;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+    3% {
+        transform: scale(1.5);
+    }
+    6% {
+        transform: scale(0.1);
+    }
+    9% {
+        transform: scale(1.25);
+    }
+    12% {
+        transform: scale(0.75);
+    }
+    15% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes colorFade {
+    0% {
+        fill: crimson;
+    }
+    20% {
+        fill: crimson;
+    }
+    100% {
+        fill: var(--piece-icon-color);
+    }
+}
+
+
+/* #endregion GAME BOARD */
+
+
+/* #region WIN SCREEN */
 
 .win-screen {
     position: fixed;
@@ -149,7 +312,6 @@ button:active {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -160,25 +322,36 @@ button:active {
 }
 
 .win-screen__content {
+    background-image: url(../images/wood-piece.jpg);
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: white;
-    border: 8px solid black;
-    padding: 32px;
+    border: 1vw solid white;
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 240px;
+    box-shadow: 10px 10px 20px 0 black, inset 4px 4px 10px 0 rgba(0, 0, 0, 0.75);
 }
 
-.win-screen__padding-right {
-    padding-right: 32px;
+.win-screen__padding-left {
+    padding-left: 8px;
+}
+
+.win-screen__text {
+    padding-right: 16px;
 }
 
 .win-screen__content .icon {
-    width: 150px;
-    height: 150px;
+    width: 20vw;
+    height: 20vw;
+    max-width: 180px;
+    max-height: 180px;
+    fill: white;
 }
 
 
-/* #endregion GAME BOARD */
+/* #endregion WIN SCREEN */
 
 
 /* #region JS SETs */
@@ -199,6 +372,10 @@ button:active {
 
 /* #region STATS */
 
+.game-stats {
+    max-width: 360px;
+}
+
 .game-stats__content {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -207,6 +384,7 @@ button:active {
 .game-stats__field {
     display: grid;
     grid-template-columns: 20px 1fr;
+    align-items: baseline;
 }
 
 .game-stats__title {
@@ -215,7 +393,17 @@ button:active {
 }
 
 .game-stats__value {
-    color: green;
+    color: lawngreen;
+    font-size: 1.4rem;
+}
+
+.next-level {
+    font-size: 0.9rem;
+}
+
+.next-level-value {
+    font-size: 1.3rem;
+    color: lawngreen;
 }
 
 

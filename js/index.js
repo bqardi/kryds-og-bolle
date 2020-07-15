@@ -5,11 +5,15 @@ document.addEventListener("DOMContentLoaded", event => {
     const xWin = document.getElementById("x-win");
     const oWin = document.getElementById("o-win");
 
-    const levelButton = document.querySelectorAll(".game-level");
+    const levelButtons = document.querySelectorAll(".game-level");
     const levelText = document.getElementById("level-text");
     const explanation = document.getElementById("explanation");
     const statX = document.getElementById("stat-x");
     const statO = document.getElementById("stat-o");
+
+    const levelMode = document.getElementById("level-mode");
+    const nextLevel = document.getElementById("next-level");
+    const nextLevelValue = document.getElementById("next-level-value");
 
     let playerX = true;
     let gameOver = false;
@@ -49,17 +53,19 @@ document.addEventListener("DOMContentLoaded", event => {
         8: null,
     }
 
-    for (let i = 0; i < levelButton.length; i++) {
-        const button = levelButton[i];
-        button.addEventListener("click", function() {
-            resetButtons(levelButton);
+    const levelUpAt = [8, 15, 21, 24, 25]
+
+    for (let i = 0; i < levelButtons.length; i++) {
+        const levelButton = levelButtons[i];
+        levelButton.addEventListener("click", function() {
+            resetButtons(levelButtons);
             this.classList.add("selected");
             const level = parseInt(this.dataset.level);
-            setLevel(level, "AI: " + this.textContent, this.dataset.explanation);
+            setLevel(level, this.ariaLabel, this.dataset.explanation);
         });
         if (i == 0) {
-            button.classList.add("selected");
-            setLevel(0, "AI: " + button.textContent, button.dataset.explanation);
+            levelButton.classList.add("selected");
+            setLevel(0, levelButton.ariaLabel, levelButton.dataset.explanation);
         }
     }
 
@@ -137,6 +143,9 @@ document.addEventListener("DOMContentLoaded", event => {
                             aiDefensive();
                             break;
                         case 3:
+                            aiClever();
+                            break;
+                        case 4:
                             aiMaster();
                             break;
 
@@ -152,6 +161,14 @@ document.addEventListener("DOMContentLoaded", event => {
         clearTimeout(winDisplayTimer);
         reset();
     });
+    levelMode.addEventListener("click", function() {
+        if (this.classList.contains("active")) {
+            levelButtonsNormal();
+        } else {
+            levelButtonsLevelmode();
+        }
+    });
+    levelButtonsLevelmode();
 
     function setLevel(level, text, explanationText) {
         aiLevel = level;
@@ -172,27 +189,6 @@ document.addEventListener("DOMContentLoaded", event => {
             rndKey = randomIndex(fields.length);
         }
         ai(rndKey, "o");
-    }
-
-    function aiDefensive() {
-        let possibleField = [];
-        for (let i = 0; i < winPattern.length; i++) {
-            const pattern = winPattern[i];
-            const fieldKey = twoCheck(pattern, "o");
-            if (fieldKey) {
-                possibleField.push(fieldKey);
-            }
-        }
-        let key;
-        if (possibleField.length == 0) {
-            key = randomIndex(fields.length);
-            while (fields[key].classList.contains("placed")) {
-                key = randomIndex(fields.length);
-            }
-        } else {
-            key = possibleField[randomIndex(possibleField.length)];
-        }
-        ai(key, "o");
     }
 
     function aiOffensive() {
@@ -216,7 +212,28 @@ document.addEventListener("DOMContentLoaded", event => {
         ai(key, "o");
     }
 
-    function aiMaster() {
+    function aiDefensive() {
+        let possibleField = [];
+        for (let i = 0; i < winPattern.length; i++) {
+            const pattern = winPattern[i];
+            const fieldKey = twoCheck(pattern, "o");
+            if (fieldKey) {
+                possibleField.push(fieldKey);
+            }
+        }
+        let key;
+        if (possibleField.length == 0) {
+            key = randomIndex(fields.length);
+            while (fields[key].classList.contains("placed")) {
+                key = randomIndex(fields.length);
+            }
+        } else {
+            key = possibleField[randomIndex(possibleField.length)];
+        }
+        ai(key, "o");
+    }
+
+    function aiClever() {
         let possibleField = [];
         for (let i = 0; i < winPattern.length; i++) {
             const pattern = winPattern[i];
@@ -225,7 +242,6 @@ document.addEventListener("DOMContentLoaded", event => {
                 possibleField.push(fieldKey);
             }
         }
-        let key;
         if (possibleField.length == 0) {
             for (let i = 0; i < winPattern.length; i++) {
                 const pattern = winPattern[i];
@@ -235,6 +251,106 @@ document.addEventListener("DOMContentLoaded", event => {
                 }
             }
         }
+        let key;
+        if (possibleField.length == 0) {
+            key = randomIndex(fields.length);
+            while (fields[key].classList.contains("placed")) {
+                key = randomIndex(fields.length);
+            }
+        } else {
+            key = possibleField[randomIndex(possibleField.length)];
+        }
+        ai(key, "o");
+    }
+
+    function aiMaster() {
+        let possibleField = [];
+        if (placementCount == 1) {
+            if (placements[4] == "x") {
+                possibleField = ["0", "2", "6", "8"];
+            } else {
+                possibleField = ["4"];
+            }
+        }
+        if (placementCount == 3) {
+            if (placements[0] == "x" && placements[4] == "o" && placements[8] == "x") {
+                possibleField = ["1", "3", "5", "7"];
+            }
+            if (placements[2] == "x" && placements[4] == "o" && placements[6] == "x") {
+                possibleField = ["1", "3", "5", "7"];
+            }
+            if (placements[0] == "x" && placements[4] == "o" && placements[7] == "x") {
+                possibleField = ["6"];
+            }
+            if (placements[0] == "x" && placements[4] == "o" && placements[5] == "x") {
+                possibleField = ["2"];
+            }
+            if (placements[2] == "x" && placements[4] == "o" && placements[7] == "x") {
+                possibleField = ["8"];
+            }
+            if (placements[2] == "x" && placements[4] == "o" && placements[3] == "x") {
+                possibleField = ["0"];
+            }
+            if (placements[6] == "x" && placements[4] == "o" && placements[1] == "x") {
+                possibleField = ["0"];
+            }
+            if (placements[6] == "x" && placements[4] == "o" && placements[5] == "x") {
+                possibleField = ["8"];
+            }
+            if (placements[8] == "x" && placements[4] == "o" && placements[1] == "x") {
+                possibleField = ["2"];
+            }
+            if (placements[8] == "x" && placements[4] == "o" && placements[3] == "x") {
+                possibleField = ["6"];
+            }
+            if (placements[0] == "x" && placements[4] == "x" && placements[8] == "o") {
+                possibleField = ["2", "6"];
+            }
+            if (placements[2] == "x" && placements[4] == "x" && placements[6] == "o") {
+                possibleField = ["0", "8"];
+            }
+            if (placements[6] == "x" && placements[4] == "x" && placements[2] == "o") {
+                possibleField = ["0", "8"];
+            }
+            if (placements[8] == "x" && placements[4] == "x" && placements[0] == "o") {
+                possibleField = ["2", "6"];
+            }
+            if (placements[1] == "x" && placements[4] == "o" && placements[7] == "x") {
+                possibleField = ["0", "2", "6", "8"];
+            }
+            if (placements[3] == "x" && placements[4] == "o" && placements[5] == "x") {
+                possibleField = ["0", "2", "6", "8"];
+            }
+            if (placements[1] == "x" && placements[4] == "o" && placements[3] == "x") {
+                possibleField = ["0", "2", "6"];
+            }
+            if (placements[1] == "x" && placements[4] == "o" && placements[5] == "x") {
+                possibleField = ["0", "2", "8"];
+            }
+            if (placements[7] == "x" && placements[4] == "o" && placements[3] == "x") {
+                possibleField = ["0", "6", "8"];
+            }
+            if (placements[7] == "x" && placements[4] == "o" && placements[5] == "x") {
+                possibleField = ["2", "6", "8"];
+            }
+        }
+        for (let i = 0; i < winPattern.length; i++) {
+            const pattern = winPattern[i];
+            const fieldKey = twoCheck(pattern, "x");
+            if (fieldKey) {
+                possibleField.push(fieldKey);
+            }
+        }
+        if (possibleField.length == 0) {
+            for (let i = 0; i < winPattern.length; i++) {
+                const pattern = winPattern[i];
+                const fieldKey = twoCheck(pattern, "o");
+                if (fieldKey) {
+                    possibleField.push(fieldKey);
+                }
+            }
+        }
+        let key;
         if (possibleField.length == 0) {
             key = randomIndex(fields.length);
             while (fields[key].classList.contains("placed")) {
@@ -306,25 +422,27 @@ document.addEventListener("DOMContentLoaded", event => {
     }
 
     function showWinner(winnerSymbol = null) {
-        if (winnerSymbol == "x") {
-            noWin.classList.add("hidden");
-            xWin.classList.remove("hidden");
-            oWin.classList.add("hidden");
-            statX.textContent = ++statX.textContent;
-        } else if (winnerSymbol == "o") {
-            noWin.classList.add("hidden");
-            xWin.classList.add("hidden");
-            oWin.classList.remove("hidden");
-            statO.textContent = ++statO.textContent;
-        } else {
-            noWin.classList.remove("hidden");
-            xWin.classList.add("hidden");
-            oWin.classList.add("hidden");
-        }
-        win.classList.remove("transparent");
-        winDisplayTimer = setTimeout(() => {
-            reset();
-        }, 3000);
+        setTimeout(() => {
+            if (winnerSymbol == "x") {
+                noWin.classList.add("hidden");
+                xWin.classList.remove("hidden");
+                oWin.classList.add("hidden");
+                statX.textContent = ++statX.textContent;
+            } else if (winnerSymbol == "o") {
+                noWin.classList.add("hidden");
+                xWin.classList.add("hidden");
+                oWin.classList.remove("hidden");
+                statO.textContent = ++statO.textContent;
+            } else {
+                noWin.classList.remove("hidden");
+                xWin.classList.add("hidden");
+                oWin.classList.add("hidden");
+            }
+            win.classList.remove("transparent");
+            winDisplayTimer = setTimeout(() => {
+                reset();
+            }, 3000);
+        }, 300);
     }
 
     function reset() {
@@ -344,6 +462,42 @@ document.addEventListener("DOMContentLoaded", event => {
         gameOver = false;
         playerX = true;
         placementCount = 0;
+        if (levelMode.classList.contains("active")) {
+            levelButtonsLevelmode();
+        }
+    }
+
+    function levelButtonsLevelmode() {
+        levelMode.classList.add("active");
+        levelMode.textContent = "Level mode: ON";
+        nextLevel.classList.remove("hidden");
+        for (let i = 0; i < levelButtons.length; i++) {
+            const levelButton = levelButtons[i];
+            levelButton.classList.add("inactive");
+            levelButton.disabled = true;
+        }
+        for (let i = 0; i < levelUpAt.length; i++) {
+            const levelMargin = levelUpAt[i];
+            if (statX.textContent < levelMargin) {
+                setLevel(i, levelButtons[i].ariaLabel, levelButtons[i].dataset.explanation);
+                levelButtons[i].classList.remove("inactive");
+                levelButtons[i].classList.add("active");
+                nextLevelValue.textContent = levelMargin;
+                break;
+            }
+        }
+    }
+
+    function levelButtonsNormal() {
+        levelMode.classList.remove("active");
+        nextLevel.classList.add("hidden");
+        levelMode.textContent = "Level mode: OFF";
+        for (let i = 0; i < levelButtons.length; i++) {
+            const levelButton = levelButtons[i];
+            levelButton.classList.remove("active");
+            levelButton.classList.remove("inactive");
+            levelButton.disabled = false;
+        }
     }
 
     function randomIndex(length) {
