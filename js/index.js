@@ -1,17 +1,19 @@
 document.addEventListener("DOMContentLoaded", event => {
     const fields = document.querySelectorAll(".field");
     const win = document.getElementById("win");
+    const levelUp = document.getElementById("level-up");
     const noWin = document.getElementById("no-win");
     const xWin = document.getElementById("x-win");
     const oWin = document.getElementById("o-win");
 
     const levelButtons = document.querySelectorAll(".game-level");
+    const modeText = document.getElementById("mode-text");
     const levelText = document.getElementById("level-text");
     const explanation = document.getElementById("explanation");
     const statX = document.getElementById("stat-x");
     const statO = document.getElementById("stat-o");
 
-    const levelMode = document.getElementById("level-mode");
+    const mode = document.getElementById("mode");
     const nextLevel = document.getElementById("next-level");
     const nextLevelValue = document.getElementById("next-level-value");
 
@@ -20,6 +22,7 @@ document.addEventListener("DOMContentLoaded", event => {
     let aiLevel = 2;
     let placementCount = 0;
     let winDisplayTimer;
+    let leveledUp = false;
 
     let player = {
         x: {
@@ -53,19 +56,17 @@ document.addEventListener("DOMContentLoaded", event => {
         8: null,
     }
 
-    const levelUpAt = [8, 15, 21, 24, 25]
-
     for (let i = 0; i < levelButtons.length; i++) {
         const levelButton = levelButtons[i];
         levelButton.addEventListener("click", function() {
             resetButtons(levelButtons);
             this.classList.add("selected");
             const level = parseInt(this.dataset.level);
-            setLevel(level, this.ariaLabel, this.dataset.explanation);
+            setLevel(level);
         });
         if (i == 0) {
             levelButton.classList.add("selected");
-            setLevel(0, levelButton.ariaLabel, levelButton.dataset.explanation);
+            setLevel(0);
         }
     }
 
@@ -136,16 +137,16 @@ document.addEventListener("DOMContentLoaded", event => {
                         case 0:
                             aiStupid();
                             break;
+                            // case 1:
+                            //     aiOffensive();
+                            //     break;
+                            // case 1:
+                            //     aiDefensive();
+                            //     break;
                         case 1:
-                            aiOffensive();
-                            break;
-                        case 2:
-                            aiDefensive();
-                            break;
-                        case 3:
                             aiClever();
                             break;
-                        case 4:
+                        case 2:
                             aiMaster();
                             break;
 
@@ -161,8 +162,12 @@ document.addEventListener("DOMContentLoaded", event => {
         clearTimeout(winDisplayTimer);
         reset();
     });
-    levelMode.addEventListener("click", function() {
-        if (this.classList.contains("active")) {
+    levelUp.addEventListener("click", function() {
+        clearTimeout(winDisplayTimer);
+        reset();
+    });
+    mode.addEventListener("click", function() {
+        if (this.classList.contains("streak")) {
             levelButtonsNormal();
         } else {
             levelButtonsLevelmode();
@@ -170,10 +175,10 @@ document.addEventListener("DOMContentLoaded", event => {
     });
     levelButtonsLevelmode();
 
-    function setLevel(level, text, explanationText) {
+    function setLevel(level) {
         aiLevel = level;
-        levelText.textContent = text;
-        explanation.textContent = explanationText;
+        levelText.textContent = levelButtons[aiLevel].ariaLabel;
+        explanation.textContent = levelButtons[aiLevel].dataset.explanation;
     }
 
     function resetButtons(btnArr) {
@@ -438,15 +443,33 @@ document.addEventListener("DOMContentLoaded", event => {
                 xWin.classList.add("hidden");
                 oWin.classList.add("hidden");
             }
-            win.classList.remove("transparent");
+            let nextLevel = false;
+            let popupTimeOut = 3000;
+            for (let i = 0; i < levelButtons.length; i++) {
+                const levelButton = levelButtons[i];
+                if (statX.textContent == levelButton.dataset.nextLevel) {
+                    nextLevel = true;
+                }
+            }
+            if (nextLevel && !leveledUp) {
+                levelUp.classList.remove("transparent");
+                levelUp.classList.add("animation");
+                popupTimeOut = 5000;
+                leveledUp = true;
+            } else {
+                win.classList.remove("transparent");
+                leveledUp = false;
+            }
             winDisplayTimer = setTimeout(() => {
                 reset();
-            }, 3000);
+            }, popupTimeOut);
         }, 300);
     }
 
     function reset() {
         win.classList.add("transparent");
+        levelUp.classList.add("transparent");
+        levelUp.classList.remove("animation");
         for (let i = 0; i < fields.length; i++) {
             const field = fields[i];
             field.classList.remove("placed");
@@ -462,42 +485,52 @@ document.addEventListener("DOMContentLoaded", event => {
         gameOver = false;
         playerX = true;
         placementCount = 0;
-        if (levelMode.classList.contains("active")) {
+        if (mode.classList.contains("streak")) {
             levelButtonsLevelmode();
         }
     }
 
     function levelButtonsLevelmode() {
-        levelMode.classList.add("active");
-        levelMode.textContent = "Level mode: ON";
+        mode.classList.add("streak");
+        mode.classList.remove("fri");
+        modeText.textContent = "Streak";
+        mode.innerHTML = `<svg viewBox="0 0 24 24"><path d="M14.58,16.59L19.17,12L14.58,7.41L16,6L22,12L16,18L14.58,16.59M8.58,16.59L13.17,12L8.58,7.41L10,6L16,12L10,18L8.58,16.59M2.58,16.59L7.17,12L2.58,7.41L4,6L10,12L4,18L2.58,16.59Z"></path></svg>`;
         nextLevel.classList.remove("hidden");
+        let levelBtnSet = false;
         for (let i = 0; i < levelButtons.length; i++) {
             const levelButton = levelButtons[i];
             levelButton.classList.add("inactive");
             levelButton.disabled = true;
-        }
-        for (let i = 0; i < levelUpAt.length; i++) {
-            const levelMargin = levelUpAt[i];
-            if (statX.textContent < levelMargin) {
-                setLevel(i, levelButtons[i].ariaLabel, levelButtons[i].dataset.explanation);
-                levelButtons[i].classList.remove("inactive");
-                levelButtons[i].classList.add("active");
-                nextLevelValue.textContent = levelMargin;
-                break;
+
+            if (!levelBtnSet) {
+                const levelMargin = parseInt(levelButton.dataset.nextLevel);
+                if (statX.textContent < levelMargin) {
+                    aiLevel = i;
+                    levelButton.classList.remove("inactive");
+                    levelButton.classList.add("active");
+                    nextLevelValue.textContent = levelMargin;
+                    levelBtnSet = true;
+                }
             }
         }
+        setLevel(aiLevel);
     }
 
     function levelButtonsNormal() {
-        levelMode.classList.remove("active");
+        mode.classList.remove("streak");
+        mode.classList.add("fri");
+        modeText.textContent = "Fri";
+        mode.innerHTML = `<svg viewBox="0 0 24 24"><path d="M18 1C15.24 1 13 3.24 13 6V8H4C2.9 8 2 8.89 2 10V20C2 21.11 2.9 22 4 22H16C17.11 22 18 21.11 18 20V10C18 8.9 17.11 8 16 8H15V6C15 4.34 16.34 3 18 3C19.66 3 21 4.34 21 6V8H23V6C23 3.24 20.76 1 18 1M10 13C11.1 13 12 13.89 12 15C12 16.11 11.11 17 10 17C8.9 17 8 16.11 8 15C8 13.9 8.9 13 10 13Z"></path></svg>`;
         nextLevel.classList.add("hidden");
-        levelMode.textContent = "Level mode: OFF";
         for (let i = 0; i < levelButtons.length; i++) {
             const levelButton = levelButtons[i];
             levelButton.classList.remove("active");
             levelButton.classList.remove("inactive");
             levelButton.disabled = false;
         }
+        resetButtons(levelButtons);
+        levelButtons[aiLevel].classList.add("selected");
+        setLevel(aiLevel);
     }
 
     function randomIndex(length) {

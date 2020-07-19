@@ -59,6 +59,7 @@ svg {
 
 body {
     background-image: url(../images/wood.jpg);
+    background-position: center;
     color: white;
     text-shadow: 1px 1px 2px black;
 }
@@ -66,8 +67,9 @@ body {
 .wrapper {
     display: grid;
     justify-content: center;
-    min-height: 100vh;
-    padding: 0 10vw;
+    grid-template-rows: auto 82px 1fr;
+    min-height: 90vh;
+    padding: 0 2.5vw;
 }
 
 
@@ -85,34 +87,49 @@ body {
 
 .main-header {
     display: grid;
-    grid-template-rows: 100px 50px 48px;
+    grid-template-rows: 92px 56px 40px;
 }
 
-.headline {
-    padding-top: 10px;
+.title {
+    padding-bottom: 8px;
 }
 
 .level-container {
     font-size: 1.2rem;
     font-weight: 700;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 360px;
 }
 
 .level-text {
     color: lawngreen;
 }
 
+.margin-right {
+    margin-right: 24px;
+}
+
 .game-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1vw;
+}
+
+.game-level__container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1vw;
 }
 
 .game-level {
+    width: 64px;
     background-color: palegreen;
     box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.75);
 }
 
-.game-level svg {
+.game-level svg,
+.mode svg {
     max-height: 24px;
 }
 
@@ -137,15 +154,20 @@ button.game-level.inactive svg {
 .explanation {
     display: flex;
     align-items: center;
-    padding: 5px 0;
 }
 
-.level-mode {
-    background-color: white;
+.mode {
+    width: 100%;
+    max-width: 150px;
+    margin-right: 16px;
 }
 
-.level-mode.active {
-    background-color: lawngreen;
+.mode.fri {
+    background-color: khaki;
+}
+
+.mode.streak {
+    background-color: orange;
 }
 
 
@@ -165,7 +187,7 @@ button.game-level.inactive svg {
 }
 
 .field {
-    --piece-icon-color: #ffd885;
+    --piece-icon-color: khaki;
     background-image: url(../images/wood-piece.jpg);
     background-size: 300%;
     width: 25vw;
@@ -290,10 +312,10 @@ button.game-level.inactive svg {
 
 @keyframes colorFade {
     0% {
-        fill: crimson;
+        fill: gold;
     }
     20% {
-        fill: crimson;
+        fill: gold;
     }
     100% {
         fill: var(--piece-icon-color);
@@ -354,6 +376,69 @@ button.game-level.inactive svg {
 /* #endregion WIN SCREEN */
 
 
+/* #region LEVEL UP SCREEN */
+
+.level-up-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+    transition: all 150ms ease-out;
+}
+
+.level-up-screen.animation .level-up-screen__content {
+    animation-name: levelUp;
+    animation-duration: 4s;
+}
+
+.level-up-screen__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../images/wood-piece.jpg);
+    background-color: white;
+    border: 1vw solid gold;
+    border-radius: 8px;
+    padding: 64px;
+    box-shadow: 10px 10px 20px 0 black, inset 4px 4px 10px 0 rgba(0, 0, 0, 0.75);
+}
+
+.level-up-screen__content .icon {
+    width: 40vw;
+    height: 40vw;
+    max-width: 230px;
+    max-height: 230px;
+    margin-bottom: 16px;
+    fill: gold;
+}
+
+@keyframes levelUp {
+    0% {
+        box-shadow: 10px 10px 20px 0 black, inset 4px 4px 10px 0 rgba(0, 0, 0, 0.75);
+    }
+    3% {
+        box-shadow: 10px 10px 20px 0 black, inset 4px 4px 10px 0 rgba(0, 0, 0, 0.75);
+    }
+    10% {
+        box-shadow: 0 0 100px 20px gold, inset 4px 4px 10px 0 rgba(0, 0, 0, 0.75);
+    }
+    100% {
+        box-shadow: 10px 10px 20px 0 black, inset 4px 4px 10px 0 rgba(0, 0, 0, 0.75);
+    }
+}
+
+
+/* #endregion LEVEL UP SCREEN */
+
+
 /* #region JS SETs */
 
 .hidden {
@@ -383,18 +468,31 @@ button.game-level.inactive svg {
 
 .game-stats__field {
     display: grid;
-    grid-template-columns: 20px 1fr;
-    align-items: baseline;
+    grid-template-columns: 48px 1fr;
+    align-items: center;
 }
 
 .game-stats__title {
     font-weight: 500;
     margin-right: 8px;
+    display: flex;
+    align-items: center;
 }
 
 .game-stats__value {
     color: lawngreen;
     font-size: 1.4rem;
+}
+
+.stat-icon {
+    width: 100%;
+    height: 100%;
+    fill: white;
+}
+
+.stat-icon--smaller {
+    width: 80%;
+    height: 80%;
 }
 
 .next-level {
